@@ -16,6 +16,7 @@ char complement(char const x) {
     return lenny;
 }
 
+
 std::string reverseComplement(std::string const& input) {
     std::string output{};
     for (long i = input.length()-1; i >= 0; i--) {
@@ -26,10 +27,10 @@ std::string reverseComplement(std::string const& input) {
 
 std::pair<std::string, std::string> readFasta(std::string const& in_file) {
     std::string meta, seq{};
-    std::pair lenny(meta, seq);
+
 
     std::ifstream myfile(in_file);
-    if (!myfile.good()) return lenny;
+    //if (!myfile.good()) return std::pair<std::string, std::string> ("","");
     std::string line;
     if (myfile.is_open()) {
         while (getline(myfile, line)) {
@@ -39,15 +40,18 @@ std::pair<std::string, std::string> readFasta(std::string const& in_file) {
             else {seq.append(line);}
         }
         myfile.close();
+        return std::pair<std::string, std::string> (meta, seq);
+    } else {
+        return std::pair<std::string, std::string> ("","");
     }
-    return lenny;
 }
 
 bool writeFasta(std::string const& out_file,
                 std::string const& meta,
                 std::string const& seq) {
-    std::ofstream myfile(out_file);
-    /*if (!myfile.good()) {return false;}
+
+    /*std::ofstream myfile(out_file);
+    if (!myfile.good()) {return false;}
     myfile << meta << '\n';
     uint16_t count{1};
     for(char elem : seq) {
@@ -58,6 +62,9 @@ bool writeFasta(std::string const& out_file,
         myfile << elem;
         count++;
     }*/
+
+    std::ofstream myfile;
+    myfile.open(out_file);
     if (!myfile.is_open()) {
         std::cout << "failed to open";
         return false;
@@ -73,8 +80,10 @@ bool writeFasta(std::string const& out_file,
             myfile << elem;
             count++;
         }
+        myfile.close();
+        return true;
     }
-    return true;
+    //return true;
 }
 
 bool reverseComplementFASTA(std::string const& input_file,
