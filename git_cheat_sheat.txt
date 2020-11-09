@@ -1,0 +1,32 @@
+#git data_structure
+
+
+
+#git basic commands
+
+git cat-file -p *hash_of_tree_or_blob*              //displays blob and tree content
+git log --all --graph --decorate                    //prints the log pretty
+git log --all --graph --decorate --oneline          //shortens and simplyfies log output
+git checkout *hash_of_previous_commit*              //working space is now the commit associated with the hash
+git diff my_file                                    //shows difference to HEAD/last commit compared to my_file
+git diff *commit_hash* my_file                      //shows difference to asso. commit compared to my_file
+git branch -vv                                      //list all branches in current repo
+git branch *new_branch*                             //creates new branches which points to current HEAD
+git merge *my_file*                                 //merges my_file to master
+git merge *my_file* --abort
+git merge *my_file* --continue                      //merge after resolving mergeconfilct
+git remote                                          //shows remote repos
+git remote add *my_name* *my_url or local_path*     //makes current repo aware of other repos
+git push *remote* *local_branch*:*remote_branch*    //pushes changes from local to remote
+git branch --set-upstream-to=origin/master          //tracks origin with local master
+git fetch *remote*                                  //retrieves changes from remote
+git pull                                            //merges remote into local master
+git add -p *my_file*                                //choose which changes should be commited
+git blame *my_file*                                 //print commits and changes by whom
+git show *comit_hash*                               //shows more info 
+git stash                                           //pops back to master but saves changes
+git stash pop                                       //it will undo the stash
+git bisect                                          //usefull for long comithistory stuff  
+
+
+
