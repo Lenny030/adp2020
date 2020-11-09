@@ -1,0 +1,4 @@
+#ignore compile-file
+aufgabe1
+*.fasta 
+!test.fasta
