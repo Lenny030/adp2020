@@ -1,6 +1,10 @@
+//
+// Created by tigerlili on 03.11.20.
+//
+
 #include "aufgabe1.hpp"
-#include <fstream>
 #include <iostream>
+#include <fstream>
 //string and utility included in hpp
 
 //returns complement of {A,C,G,T}, otherwise 0 
@@ -29,7 +33,7 @@ std::string reverseComplement(std::string const& input){
     {
         rev.push_back(complement(input.at(i)));
     }
-    return rev;
+return rev;
 }
             
 std::pair<std::string, std::string> readFasta(std::string const& in_file){
@@ -45,14 +49,12 @@ std::pair<std::string, std::string> readFasta(std::string const& in_file){
             if(line[0] == '>' || line[0] == ';'){
                 meta.append(line);
             }
-            else{
-                seq.append(line);
-            }
-        }  
+            else {seq.append(line);}
+        }
         return std::pair<std::string, std::string> (meta, seq);
-    }
-    else { 
-        return std::pair<std::string, std::string> ("", "");
+    } 
+    else {
+        return std::pair<std::string, std::string> ("","");
     }
 }
 
@@ -73,13 +75,10 @@ bool writeFasta(std::string const& out_file,
             std::string temp = seq.substr(i, 80);
             f << temp << std::endl;
         }
-             
         f.close();
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 bool reverseComplementFASTA(std::string const& input_file,
@@ -90,4 +89,3 @@ bool reverseComplementFASTA(std::string const& input_file,
     if(yeet.first == "" && yeet.second == "") {return false;} 
     return writeFasta(output_file, yeet.first, (reverseComplement(yeet.second)));
 }
-
