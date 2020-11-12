@@ -16,7 +16,6 @@ char complement(char const x){
         case 'T':
             return 'A';
         default:
-            std::cout << "Wrong input \n";
             return '0'; 
     }
 }
@@ -26,7 +25,7 @@ std::string reverseComplement(std::string const& input){
 
     std::string rev {};
 
-    for(int i = input.size()-1; i <= 0; --i)
+    for(int i = input.length()-1; i >= 0; --i)
     {
         rev.push_back(complement(input.at(i)));
     }
@@ -90,6 +89,5 @@ bool reverseComplementFASTA(std::string const& input_file,
     //returns false, if elements of tuple are empty, otherwise true
     if(yeet.first == "" && yeet.second == "") {return false;} 
     return writeFasta(output_file, yeet.first, (reverseComplement(yeet.second)));
-
 }
 
