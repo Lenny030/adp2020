@@ -1,9 +1,9 @@
 #include "aufgabe1.hpp"
 #include <fstream>
 #include <iostream>
-#include <iterator>
-#include <string>
-#include <sys/types.h>
+//string and utility included in hpp
+
+//returns complement of {A,C,G,T}, otherwise 0 
 char complement(char const x){
 
     switch(x) {
@@ -17,29 +17,32 @@ char complement(char const x){
             return 'A';
         default:
             std::cout << "Wrong input \n";
-            return 'X'; 
+            return '0'; 
     }
 }
 
+//reads the givin string backwards and push_backs the complement of each char
 std::string reverseComplement(std::string const& input){
-    //cuz string is const, i use the reverseiterator from the header "iterator" 
-    std::reverse_iterator<std::string::const_iterator> r = input.rbegin();
-    std::string rev(r, input.rend());
-    //building complement of reversed string
-    for(u_int32_t i {}; i < rev.size(); ++i){
-        char temp {rev[i]};
-        rev[i] = complement(temp); 
+
+    std::string rev {};
+
+    for(int i = input.size()-1; i <= 0; --i)
+    {
+        rev.push_back(complement(input.at(i)));
     }
     return rev;
 }
-
+            
 std::pair<std::string, std::string> readFasta(std::string const& in_file){
 
     std::string line, meta, seq;
-    std::ifstream file (in_file);
+    std::ifstream f (in_file, std::ifstream::in);           //in flag = file open for reading
 
-    if (file.is_open()){
-        while(getline(file, line)){
+    //as long as the file is open keep getting lines and append them to the correspoding string
+    if (f.is_open())
+    {
+        while(getline(f, line))
+        {
             if(line[0] == '>' || line[0] == ';'){
                 meta.append(line);
             }
@@ -58,19 +61,21 @@ bool writeFasta(std::string const& out_file,
                 std::string const& meta,
                 std::string const& seq){
 
-    std::ofstream file;
-    file.open(out_file);
+    std::ofstream f;
+    f.open(out_file, std::ofstream::out);   //file open for writing
 
-    if (file.is_open()) {
+    //if its open and writable then ... return true
+    if (f.is_open())
+    {
         //meta output
-        file << meta << std::endl;
+        f << meta << std::endl;
         //splitting the seq into 80 char long lines
         for(u_int32_t i {}; i < seq.size(); i+=80) {
             std::string temp = seq.substr(i, 80);
-            file << temp << std::endl;
+            f << temp << std::endl;
         }
              
-        file.close();
+        f.close();
         return true;
     }
     else {
@@ -82,8 +87,8 @@ bool reverseComplementFASTA(std::string const& input_file,
                             std::string const& output_file){
 
     std::pair<std::string, std::string> yeet {readFasta(input_file)};
+    //returns false, if elements of tuple are empty, otherwise true
     if(yeet.first == "" && yeet.second == "") {return false;} 
-
     return writeFasta(output_file, yeet.first, (reverseComplement(yeet.second)));
 
 }
