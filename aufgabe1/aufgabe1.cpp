@@ -6,42 +6,53 @@
 #include <iostream>
 #include <fstream>
 
-char complement(char const x) {
-    if (x == 'A') { return 'T'; }
-    else if (x == 'T') { return 'A'; }
-    else if (x == 'G') { return 'C'; }
-    else if (x == 'C') { return 'G'; }
-    else {
-        std::cout << "Error: no dna base.\n";
-        return 'X';
-    }
+//string and utility included in hpp
 
+//returns complement of {A,C,G,T}, otherwise 0 
+char complement(char const x){
+
+    switch(x) {
+        case 'A':
+            return 'T';
+        case 'C':
+            return 'G';
+        case 'G':
+            return 'C';
+        case 'T':
+            return 'A';
+        default:
+            return '0'; 
+    }
 }
 
+//reads the givin string backwards and push_backs the complement of each char
+std::string reverseComplement(std::string const& input){
 
-std::string reverseComplement(std::string const& input) {
-    std::string output{};
+    std::string rev {};
 
-    for (int i = input.length()-1; i >= 0; i--) {
-        output.push_back(complement(input[i]));
+    for(int i = input.length()-1; i >= 0; --i)
+    {
+        rev.push_back(complement(input.at(i)));
     }
-
-    return output;
+return rev;
 }
+            
+std::pair<std::string, std::string> readFasta(std::string const& in_file){
 
-std::pair<std::string, std::string> readFasta(std::string const& in_file) {
-    std::string meta, seq{};
+    std::string line, meta, seq;
+    std::ifstream f (in_file, std::ifstream::in);           //in flag = file open for reading
 
-    std::ifstream myfile(in_file);
-    std::string line;
-    if (myfile.is_open()) {
-        while (getline(myfile, line)) {
-            if (line[0] == '>' || line[0] == ';') {
+    //as long as the file is open keep getting lines and append them to the correspoding string
+    if (f.is_open())
+    {
+        while(getline(f, line))
+        {
+            if(line[0] == '>' || line[0] == ';'){
                 meta.append(line);
             }
             else {seq.append(line);}
         }
-        myfile.close();
+        f.close();
         return std::pair<std::string, std::string> (meta, seq);
     } else {
         return std::pair<std::string, std::string> ("","");
@@ -51,32 +62,31 @@ std::pair<std::string, std::string> readFasta(std::string const& in_file) {
 bool writeFasta(std::string const& out_file,
                 std::string const& meta,
                 std::string const& seq) {
-    std::ofstream myfile;
-    myfile.open(out_file);
-    if (!myfile.is_open()) {
-        std::cout << "failed to open";
-        return false;
-    }
-    else {
-        myfile << meta << '\n';
-        uint16_t count{1};
-        for(char elem : seq) {
-            if (count == 81) {
-                myfile << '\n';
-                count = 1;
-            }
-            myfile << elem;
-            count++;
+
+    std::ofstream f;
+    f.open(out_file, std::ofstream::out);   //file open for writing
+
+    //if its open and writable then ... return true
+    if (f.is_open())
+    {
+        //meta output
+        f << meta << std::endl;
+        //splitting the seq into 80 char long lines
+        for(u_int32_t i {}; i < seq.size(); i+=80) {
+            std::string temp = seq.substr(i, 80);
+            f << temp << std::endl;
         }
-        myfile.close();
+        f.close();
         return true;
     }
+    return false;
 }
 
 bool reverseComplementFASTA(std::string const& input_file,
-                            std::string const& output_file) {
-    std::pair<std::string, std::string> lenny = readFasta(input_file);
-    if(lenny.first.empty() && lenny.second.empty()) {return false;}
-    std::string seq = reverseComplement(lenny.second);
-    return writeFasta(output_file, lenny.first, seq);
+                            std::string const& output_file){
+
+    std::pair<std::string, std::string> yeet {readFasta(input_file)};
+    //returns false, if elements of tuple are empty, otherwise true
+    if(yeet.first == "" && yeet.second == "") {return false;} 
+    return writeFasta(output_file, yeet.first, (reverseComplement(yeet.second)));
 }
