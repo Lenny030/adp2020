@@ -1,90 +1,82 @@
+//
+// Created by tigerlili on 03.11.20.
+//
+
 #include "aufgabe1.hpp"
-#include <fstream>
 #include <iostream>
-#include <iterator>
-#include <string>
-#include <sys/types.h>
-char complement(char const x){
+#include <fstream>
 
-    switch(x) {
-        case 'A':
-            return 'T';
-        case 'C':
-            return 'G';
-        case 'G':
-            return 'C';
-        case 'T':
-            return 'A';
-        default:
-            std::cout << "Wrong input \n";
-            return 'X'; 
+char complement(char const x) {
+    if (x == 'A') { return 'T'; }
+    else if (x == 'T') { return 'A'; }
+    else if (x == 'G') { return 'C'; }
+    else if (x == 'C') { return 'G'; }
+    else {
+        std::cout << "Error: no dna base.\n";
+        return 'X';
     }
+
 }
 
-std::string reverseComplement(std::string const& input){
-    //cuz string is const, i use the reverseiterator from the header "iterator" 
-    std::reverse_iterator<std::string::const_iterator> r = input.rbegin();
-    std::string rev(r, input.rend());
-    //building complement of reversed string
-    for(u_int32_t i {}; i < rev.size(); ++i){
-        char temp {rev[i]};
-        rev[i] = complement(temp); 
+
+std::string reverseComplement(std::string const& input) {
+    std::string output{};
+
+    for (int i = input.length()-1; i >= 0; i--) {
+        output.push_back(complement(input[i]));
     }
-    return rev;
+
+    return output;
 }
 
-std::pair<std::string, std::string> readFasta(std::string const& in_file){
+std::pair<std::string, std::string> readFasta(std::string const& in_file) {
+    std::string meta, seq{};
 
-    std::string line, meta, seq;
-    std::ifstream file (in_file);
-
-    if (file.is_open()){
-        while(getline(file, line)){
-            if(line[0] == '>' || line[0] == ';'){
+    std::ifstream myfile(in_file);
+    std::string line;
+    if (myfile.is_open()) {
+        while (getline(myfile, line)) {
+            if (line[0] == '>' || line[0] == ';') {
                 meta.append(line);
             }
-            else{
-                seq.append(line);
-            }
-        }  
+            else {seq.append(line);}
+        }
+        myfile.close();
         return std::pair<std::string, std::string> (meta, seq);
-    }
-    else { 
-        return std::pair<std::string, std::string> ("", "");
+    } else {
+        return std::pair<std::string, std::string> ("","");
     }
 }
 
 bool writeFasta(std::string const& out_file,
                 std::string const& meta,
-                std::string const& seq){
-
-    std::ofstream file;
-    file.open(out_file);
-
-    if (file.is_open()) {
-        //meta output
-        file << meta << std::endl;
-        //splitting the seq into 80 char long lines
-        for(u_int32_t i {}; i < seq.size(); i+=80) {
-            std::string temp = seq.substr(i, 80);
-            file << temp << std::endl;
-        }
-             
-        file.close();
-        return true;
+                std::string const& seq) {
+    std::ofstream myfile;
+    myfile.open(out_file);
+    if (!myfile.is_open()) {
+        std::cout << "failed to open";
+        return false;
     }
     else {
-        return false;
+        myfile << meta << '\n';
+        uint16_t count{1};
+        for(char elem : seq) {
+            if (count == 81) {
+                myfile << '\n';
+                count = 1;
+            }
+            myfile << elem;
+            count++;
+        }
+        myfile.close();
+        return true;
     }
 }
 
 bool reverseComplementFASTA(std::string const& input_file,
-                            std::string const& output_file){
-
-    std::pair<std::string, std::string> yeet {readFasta(input_file)};
-    if(yeet.first == "" && yeet.second == "") {return false;} 
-
-    return writeFasta(output_file, yeet.first, (reverseComplement(yeet.second)));
-
+                            std::string const& output_file) {
+    std::pair<std::string, std::string> lenny = readFasta(input_file);
+    if(lenny.first.empty() && lenny.second.empty()) {return false;}
+    std::string seq = reverseComplement(lenny.second);
+    return writeFasta(output_file, lenny.first, seq);
 }
-
