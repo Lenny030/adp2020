@@ -7,7 +7,10 @@ int main(int argc, char* argv[])
     if(argc == 2)
     {
         //modi1
-        
+        std::vector<uint32_t> junge {};
+        std::string text (argv[1]);
+        construct(junge, text);
+        for(auto e : junge) std::cout << e << '\n';
         return 0;
     }
 
