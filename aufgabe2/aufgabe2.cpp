@@ -17,8 +17,8 @@ void construct(std::vector<uint32_t>& sa, const std::string& text)
         {
             ++a;
             ++b;
-       }
-       return a > b;
+        }
+        return a > b;
     });
 }
 
@@ -46,3 +46,18 @@ void construct_alt(std::vector<uint32_t>& sa, const std::string& text)
        return ans;
     });
 }
+
+void construct_speed(std::vector<uint32_t>& sa, const std::string& text)
+{
+    sa.clear();
+    //pushes indices from 0 to n-1 into sa 
+    for(uint32_t i {}; i < text.size(); ++i) sa.push_back(i);
+
+    std::sort(sa.begin(), sa.end(), [&] (uint32_t a, uint32_t b) 
+    {
+    const char* a_ptr = text.c_str() + a -1, *b_ptr = text.c_str() +b -1;
+    while(*(a_ptr++) == *(b_ptr++));
+    return *a_ptr < *b_ptr;
+    });
+}
+

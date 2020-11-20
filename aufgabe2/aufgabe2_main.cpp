@@ -27,7 +27,6 @@ int main(int argc, char* argv[])
 
         //starts computing
         std::vector<unsigned int> junge {};
-        std::cout << "sa_size: " << junge.size() << "\n text_size: " << text.size() << std::endl;
 
         //modi1
         auto start = std::chrono::steady_clock::now();
@@ -37,6 +36,15 @@ int main(int argc, char* argv[])
 
         std::cout << "Elapsed time in milliseconds (smart) : "
                   << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+                  << " ms" << std::endl;
+        //modi1
+        std::vector<unsigned int> junge0 {};
+        auto start0 = std::chrono::steady_clock::now();
+        construct_speed(junge0, text);
+        auto end0 = std::chrono::steady_clock::now();
+
+        std::cout << "Elapsed time in milliseconds (antons SPEEEEEEEEED : "
+                  << std::chrono::duration_cast<std::chrono::milliseconds>(end0 - start0).count()
                   << " ms" << std::endl;
     }
 
