@@ -1,2 +1,5 @@
 #ignore compile-file
 a.out
+#ignore fasta_files
+*.fasta
+!Candidatus.Solibacter.usitatusEllin6076.fasta

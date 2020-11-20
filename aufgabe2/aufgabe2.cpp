@@ -2,7 +2,6 @@
 #include<algorithm>
 #include<iostream>
 
-
 void construct(std::vector<uint32_t>& sa, const std::string& text)
 {
     sa.clear();
@@ -18,9 +17,10 @@ void construct(std::vector<uint32_t>& sa, const std::string& text)
             ++a;
             ++b;
         }
-        return a > b;
+        return text[a] < text[b];
     });
 }
+
 
 void construct_alt(std::vector<uint32_t>& sa, const std::string& text)
 {
